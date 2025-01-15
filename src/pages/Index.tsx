@@ -129,15 +129,16 @@ const Index = () => {
           />
         </div>
 
-        <IdeasCounter count={ideasCount} />
-
         <Button 
+          size="lg"
           variant="outline" 
-          className="border-[#8B5CF6] text-[#8B5CF6] hover:bg-[#8B5CF6] hover:text-white transition-colors duration-300"
+          className="bg-white border-2 border-[#8B5CF6] text-[#8B5CF6] hover:bg-[#8B5CF6] hover:text-white transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl rounded-full px-8 py-6 font-semibold text-lg animate-pulse"
           onClick={() => setShareOpen(true)}
         >
-          I want to do this one!
+          🎯 Yes! I'll Do This One! 🎯
         </Button>
+
+        <IdeasCounter count={ideasCount} />
 
         <ShareModal
           open={shareOpen}
