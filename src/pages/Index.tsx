@@ -38,13 +38,48 @@ const Index = () => {
   const [ideasCount, setIdeasCount] = useState(0);
   const [shareOpen, setShareOpen] = useState(false);
 
+  const generateNewAction = () => {
+    return actions[Math.floor(Math.random() * actions.length)];
+  };
+
+  const generateNewRecipient = () => {
+    return recipients[Math.floor(Math.random() * recipients.length)];
+  };
+
+  const generateNewTime = () => {
+    return times[Math.floor(Math.random() * times.length)];
+  };
+
   const generateNewIdea = () => {
-    const newIdea = {
-      action: actions[Math.floor(Math.random() * actions.length)],
-      recipient: recipients[Math.floor(Math.random() * recipients.length)],
-      time: times[Math.floor(Math.random() * times.length)],
-    };
-    setCurrentIdea(newIdea);
+    setCurrentIdea({
+      action: generateNewAction(),
+      recipient: generateNewRecipient(),
+      time: generateNewTime(),
+    });
+    setIdeasCount(prev => prev + 1);
+  };
+
+  const handleNewAction = () => {
+    setCurrentIdea(prev => ({
+      ...prev,
+      action: generateNewAction(),
+    }));
+    setIdeasCount(prev => prev + 1);
+  };
+
+  const handleNewRecipient = () => {
+    setCurrentIdea(prev => ({
+      ...prev,
+      recipient: generateNewRecipient(),
+    }));
+    setIdeasCount(prev => prev + 1);
+  };
+
+  const handleNewTime = () => {
+    setCurrentIdea(prev => ({
+      ...prev,
+      time: generateNewTime(),
+    }));
     setIdeasCount(prev => prev + 1);
   };
 
@@ -55,17 +90,17 @@ const Index = () => {
   const fullIdeaText = `${currentIdea.action} ${currentIdea.recipient} ${currentIdea.time}`;
 
   return (
-    <div className="min-h-screen flex flex-col items-center px-4 py-8 gap-8">
+    <div className="min-h-screen flex flex-col items-center px-4 py-8 gap-8 bg-gradient-to-b from-[#F2FCE2] to-[#F1F0FB]">
       <div className="w-full max-w-2xl flex flex-col items-center gap-8">
-        <h1 className="text-4xl font-bold text-primary text-center">The Chesed Machine</h1>
+        <h1 className="text-4xl font-bold text-[#8B5CF6] text-center font-serif">The Chesed Machine</h1>
         
-        <p className="text-center text-lg">
+        <p className="text-center text-lg text-[#4B5563]">
           Tap the button below to generate a unique chesed idea just for you!
         </p>
 
         <Button 
           size="lg" 
-          className="bg-primary hover:bg-primary/90"
+          className="bg-[#8B5CF6] hover:bg-[#7C3AED] transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
           onClick={generateNewIdea}
         >
           Generate Ideas
@@ -75,17 +110,17 @@ const Index = () => {
           <IdeaCard
             title="Do what:"
             content={currentIdea.action}
-            onNewIdea={generateNewIdea}
+            onNewIdea={handleNewAction}
           />
           <IdeaCard
             title="For whom:"
             content={currentIdea.recipient}
-            onNewIdea={generateNewIdea}
+            onNewIdea={handleNewRecipient}
           />
           <IdeaCard
             title="When:"
             content={currentIdea.time}
-            onNewIdea={generateNewIdea}
+            onNewIdea={handleNewTime}
           />
         </div>
 
@@ -93,7 +128,7 @@ const Index = () => {
 
         <Button 
           variant="outline" 
-          className="border-primary text-primary hover:bg-primary hover:text-white"
+          className="border-[#8B5CF6] text-[#8B5CF6] hover:bg-[#8B5CF6] hover:text-white transition-colors duration-300"
           onClick={() => setShareOpen(true)}
         >
           I want to do this one!
