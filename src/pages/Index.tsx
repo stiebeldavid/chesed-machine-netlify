@@ -38,6 +38,7 @@ const Index = () => {
   const [ideasCount, setIdeasCount] = useState(0);
   const [shareOpen, setShareOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(true);
+  const [isFlipping, setIsFlipping] = useState(false);
 
   const generateNewAction = () => {
     return actions[Math.floor(Math.random() * actions.length)];
@@ -52,14 +53,18 @@ const Index = () => {
   };
 
   const generateNewIdea = () => {
-    setCurrentIdea({
-      action: generateNewAction(),
-      recipient: generateNewRecipient(),
-      time: generateNewTime(),
-    });
-    setIdeasCount(prev => prev + 1);
-    setIsAnimating(true);
-    setTimeout(() => setIsAnimating(false), 1000); // Stop after ~2 bounces
+    setIsFlipping(true);
+    setTimeout(() => {
+      setCurrentIdea({
+        action: generateNewAction(),
+        recipient: generateNewRecipient(),
+        time: generateNewTime(),
+      });
+      setIdeasCount(prev => prev + 1);
+      setIsAnimating(true);
+      setIsFlipping(false);
+    }, 400); // Half the animation duration to update content mid-flip
+    setTimeout(() => setIsAnimating(false), 1000);
   };
 
   const handleNewAction = () => {
@@ -88,7 +93,6 @@ const Index = () => {
 
   useEffect(() => {
     generateNewIdea();
-    // Stop initial animation after 1 second
     setTimeout(() => setIsAnimating(false), 1000);
   }, []);
 
@@ -116,16 +120,19 @@ const Index = () => {
             title="Do what:"
             content={currentIdea.action}
             onNewIdea={handleNewAction}
+            isFlipping={isFlipping}
           />
           <IdeaCard
             title="For whom:"
             content={currentIdea.recipient}
             onNewIdea={handleNewRecipient}
+            isFlipping={isFlipping}
           />
           <IdeaCard
             title="When:"
             content={currentIdea.time}
             onNewIdea={handleNewTime}
+            isFlipping={isFlipping}
           />
         </div>
 
