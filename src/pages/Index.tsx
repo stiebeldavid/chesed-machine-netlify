@@ -132,10 +132,11 @@ const Index = () => {
         <Button 
           size="lg"
           variant="outline" 
-          className="bg-white border-2 border-[#8B5CF6] text-[#8B5CF6] hover:bg-[#8B5CF6] hover:text-white transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl rounded-full px-8 py-6 font-semibold text-lg animate-pulse"
+          className="bg-white border-2 border-[#8B5CF6] text-[#8B5CF6] hover:bg-[#8B5CF6] hover:text-white transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl rounded-full px-8 py-6 font-semibold text-lg flex flex-col"
           onClick={() => setShareOpen(true)}
         >
-          🎯 Yes! I'll Do This One! 🎯
+          <span>🎯 Yes! I'll Do This One! 🎯</span>
+          <span className="text-sm font-normal opacity-75">(bli neder)</span>
         </Button>
 
         <IdeasCounter count={ideasCount} />
