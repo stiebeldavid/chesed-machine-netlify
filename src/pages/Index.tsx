@@ -108,7 +108,7 @@ const Index = () => {
           className={`bg-[#8B5CF6] hover:bg-[#7C3AED] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-110 active:scale-95 rounded-full px-8 py-6 font-semibold text-lg ${isAnimating ? 'animate-bounce' : ''}`}
           onClick={generateNewIdea}
         >
-          ✨ Generate Ideas ✨
+          ✨ Generate new idea! ✨
         </Button>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
