@@ -128,8 +128,8 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col items-center px-4 py-8 gap-8 bg-gradient-to-b from-[#F2FCE2] to-[#F1F0FB]">
       <div className="w-full max-w-2xl flex flex-col items-center gap-8">
-        <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#8B5CF6] via-[#D946EF] to-[#8B5CF6] text-center font-serif animate-pulse hover:scale-105 transition-transform duration-300 cursor-default">
-          ✨ The Chesed Machine ✨
+        <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#8B5CF6] via-[#D946EF] to-[#8B5CF6] text-center font-serif hover:scale-105 transition-transform duration-300 cursor-default">
+          The Chesed Machine
         </h1>
         
         <p className="text-center text-lg text-[#4B5563]">
