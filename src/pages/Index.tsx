@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button";
 import { IdeaCard } from "@/components/IdeaCard";
 import { ShareModal } from "@/components/ShareModal";
 import { IdeasCounter } from "@/components/IdeasCounter";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-// Temporary data arrays until we integrate with Google Sheets
 const actions = [
   "Deliver hot chocolate to",
   "Write a thank you note to",
@@ -35,7 +36,6 @@ const Index = () => {
     recipient: "",
     time: "",
   });
-  const [ideasCount, setIdeasCount] = useState(0);
   const [shareOpen, setShareOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(true);
   const [flippingStates, setFlippingStates] = useState({
@@ -43,6 +43,43 @@ const Index = () => {
     recipient: false,
     time: false
   });
+
+  const queryClient = useQueryClient();
+
+  // Fetch the current count
+  const { data: counterData } = useQuery({
+    queryKey: ['counter'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('Counter')
+        .select('count')
+        .maybeSingle();
+      
+      if (error) {
+        console.error('Error fetching counter:', error);
+        return { count: 0 };
+      }
+      return data || { count: 0 };
+    }
+  });
+
+  const incrementCounter = async () => {
+    const { error } = await supabase
+      .from('Counter')
+      .update({ 
+        count: (counterData?.count || 0) + 1,
+        last_updated: new Date().toISOString()
+      })
+      .eq('count', counterData?.count || 0);
+
+    if (error) {
+      console.error('Error incrementing counter:', error);
+      return;
+    }
+
+    // Invalidate the counter query to trigger a refetch
+    queryClient.invalidateQueries({ queryKey: ['counter'] });
+  };
 
   const generateNewAction = () => {
     return actions[Math.floor(Math.random() * actions.length)];
@@ -56,12 +93,14 @@ const Index = () => {
     return times[Math.floor(Math.random() * times.length)];
   };
 
-  const generateNewIdea = () => {
+  const generateNewIdea = async () => {
     setFlippingStates({
       action: true,
       recipient: true,
       time: true
     });
+    
+    await incrementCounter();
     
     setTimeout(() => {
       setCurrentIdea({
@@ -69,7 +108,6 @@ const Index = () => {
         recipient: generateNewRecipient(),
         time: generateNewTime(),
       });
-      setIdeasCount(prev => prev + 1);
       setIsAnimating(true);
       
       setFlippingStates({
@@ -82,45 +120,44 @@ const Index = () => {
     setTimeout(() => setIsAnimating(false), 1000);
   };
 
-  const handleNewAction = () => {
+  const handleNewAction = async () => {
     setFlippingStates(prev => ({ ...prev, action: true }));
+    await incrementCounter();
     setTimeout(() => {
       setCurrentIdea(prev => ({
         ...prev,
         action: generateNewAction(),
       }));
-      setIdeasCount(prev => prev + 1);
       setFlippingStates(prev => ({ ...prev, action: false }));
     }, 400);
   };
 
-  const handleNewRecipient = () => {
+  const handleNewRecipient = async () => {
     setFlippingStates(prev => ({ ...prev, recipient: true }));
+    await incrementCounter();
     setTimeout(() => {
       setCurrentIdea(prev => ({
         ...prev,
         recipient: generateNewRecipient(),
       }));
-      setIdeasCount(prev => prev + 1);
       setFlippingStates(prev => ({ ...prev, recipient: false }));
     }, 400);
   };
 
-  const handleNewTime = () => {
+  const handleNewTime = async () => {
     setFlippingStates(prev => ({ ...prev, time: true }));
+    await incrementCounter();
     setTimeout(() => {
       setCurrentIdea(prev => ({
         ...prev,
         time: generateNewTime(),
       }));
-      setIdeasCount(prev => prev + 1);
       setFlippingStates(prev => ({ ...prev, time: false }));
     }, 400);
   };
 
   useEffect(() => {
     generateNewIdea();
-    setTimeout(() => setIsAnimating(false), 1000);
   }, []);
 
   const fullIdeaText = `${currentIdea.action} ${currentIdea.recipient} ${currentIdea.time}`;
@@ -141,7 +178,7 @@ const Index = () => {
           className={`bg-[#8B5CF6] hover:bg-[#7C3AED] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-110 active:scale-95 rounded-full px-8 py-6 font-semibold text-lg ${isAnimating ? 'animate-bounce' : ''}`}
           onClick={generateNewIdea}
         >
-          ✨ Generate new idea! ✨
+          Generate new idea!
         </Button>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
@@ -175,7 +212,7 @@ const Index = () => {
           <span className="text-sm font-normal opacity-75 -mt-1">(bli neder)</span>
         </Button>
 
-        <IdeasCounter count={ideasCount} />
+        <IdeasCounter count={counterData?.count || 0} />
 
         <ShareModal
           open={shareOpen}
