@@ -22,7 +22,10 @@ export function IdeaCard({ title, content, onNewIdea, isFlipping = false }: Idea
         variant="ghost" 
         size="icon"
         className="absolute top-2 right-2 w-8 h-8 bg-white/50 border-[#8B5CF6] text-[#8B5CF6] hover:bg-[#8B5CF6] hover:text-white transition-colors duration-300 rounded-full"
-        onClick={onNewIdea}
+        onClick={(e) => {
+          e.stopPropagation(); // Prevent event bubbling
+          onNewIdea();
+        }}
       >
         <RefreshCw className="h-4 w-4" />
       </Button>

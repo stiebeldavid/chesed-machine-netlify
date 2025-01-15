@@ -38,7 +38,11 @@ const Index = () => {
   const [ideasCount, setIdeasCount] = useState(0);
   const [shareOpen, setShareOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(true);
-  const [isFlipping, setIsFlipping] = useState(false);
+  const [flippingStates, setFlippingStates] = useState({
+    action: false,
+    recipient: false,
+    time: false
+  });
 
   const generateNewAction = () => {
     return actions[Math.floor(Math.random() * actions.length)];
@@ -53,7 +57,12 @@ const Index = () => {
   };
 
   const generateNewIdea = () => {
-    setIsFlipping(true);
+    setFlippingStates({
+      action: true,
+      recipient: true,
+      time: true
+    });
+    
     setTimeout(() => {
       setCurrentIdea({
         action: generateNewAction(),
@@ -62,33 +71,51 @@ const Index = () => {
       });
       setIdeasCount(prev => prev + 1);
       setIsAnimating(true);
-      setIsFlipping(false);
-    }, 400); // Half the animation duration to update content mid-flip
+      
+      setFlippingStates({
+        action: false,
+        recipient: false,
+        time: false
+      });
+    }, 400);
+    
     setTimeout(() => setIsAnimating(false), 1000);
   };
 
   const handleNewAction = () => {
-    setCurrentIdea(prev => ({
-      ...prev,
-      action: generateNewAction(),
-    }));
-    setIdeasCount(prev => prev + 1);
+    setFlippingStates(prev => ({ ...prev, action: true }));
+    setTimeout(() => {
+      setCurrentIdea(prev => ({
+        ...prev,
+        action: generateNewAction(),
+      }));
+      setIdeasCount(prev => prev + 1);
+      setFlippingStates(prev => ({ ...prev, action: false }));
+    }, 400);
   };
 
   const handleNewRecipient = () => {
-    setCurrentIdea(prev => ({
-      ...prev,
-      recipient: generateNewRecipient(),
-    }));
-    setIdeasCount(prev => prev + 1);
+    setFlippingStates(prev => ({ ...prev, recipient: true }));
+    setTimeout(() => {
+      setCurrentIdea(prev => ({
+        ...prev,
+        recipient: generateNewRecipient(),
+      }));
+      setIdeasCount(prev => prev + 1);
+      setFlippingStates(prev => ({ ...prev, recipient: false }));
+    }, 400);
   };
 
   const handleNewTime = () => {
-    setCurrentIdea(prev => ({
-      ...prev,
-      time: generateNewTime(),
-    }));
-    setIdeasCount(prev => prev + 1);
+    setFlippingStates(prev => ({ ...prev, time: true }));
+    setTimeout(() => {
+      setCurrentIdea(prev => ({
+        ...prev,
+        time: generateNewTime(),
+      }));
+      setIdeasCount(prev => prev + 1);
+      setFlippingStates(prev => ({ ...prev, time: false }));
+    }, 400);
   };
 
   useEffect(() => {
@@ -120,19 +147,19 @@ const Index = () => {
             title="Do what:"
             content={currentIdea.action}
             onNewIdea={handleNewAction}
-            isFlipping={isFlipping}
+            isFlipping={flippingStates.action}
           />
           <IdeaCard
             title="For whom:"
             content={currentIdea.recipient}
             onNewIdea={handleNewRecipient}
-            isFlipping={isFlipping}
+            isFlipping={flippingStates.recipient}
           />
           <IdeaCard
             title="When:"
             content={currentIdea.time}
             onNewIdea={handleNewTime}
-            isFlipping={isFlipping}
+            isFlipping={flippingStates.time}
           />
         </div>
 
