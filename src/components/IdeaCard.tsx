@@ -33,11 +33,11 @@ export function IdeaCard({ title, content, onNewIdea }: IdeaCardProps) {
       >
         <RefreshCw className="h-4 w-4" />
       </Button>
-      <CardHeader>
-        <CardTitle className="text-xl font-serif text-[#8B5CF6]">{title}</CardTitle>
+      <CardHeader className="py-3 px-4">
+        <CardTitle className="text-lg font-serif text-[#8B5CF6]">{title}</CardTitle>
       </CardHeader>
-      <CardContent>
-        <p className="text-2xl font-serif mb-4 text-[#4B5563] min-h-[80px]">{content}</p>
+      <CardContent className="py-2 px-4">
+        <p className="text-xl font-serif text-[#4B5563] min-h-[60px]">{content}</p>
       </CardContent>
     </Card>
   );
