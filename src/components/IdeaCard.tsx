@@ -21,24 +21,23 @@ export function IdeaCard({ title, content, onNewIdea }: IdeaCardProps) {
 
   return (
     <Card className={cn(
-      "w-full bg-gradient-to-br from-[#FDE1D3] to-[#FEF7CD] border-2 border-[#FEC6A1] shadow-lg",
+      "w-full bg-gradient-to-br from-[#FDE1D3] to-[#FEF7CD] border-2 border-[#FEC6A1] shadow-lg relative",
       "transform transition-all duration-500 hover:scale-105",
       isSpinning && "animate-[spin_0.5s_ease-in-out]"
     )}>
+      <Button 
+        variant="ghost" 
+        size="icon"
+        className="absolute top-2 right-2 w-8 h-8 bg-white/50 border-[#8B5CF6] text-[#8B5CF6] hover:bg-[#8B5CF6] hover:text-white transition-colors duration-300 rounded-full"
+        onClick={handleRefresh}
+      >
+        <RefreshCw className="h-4 w-4" />
+      </Button>
       <CardHeader>
         <CardTitle className="text-xl font-serif text-[#8B5CF6]">{title}</CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-2xl font-serif mb-4 text-[#4B5563] min-h-[80px]">{content}</p>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="bg-white/50 border-[#8B5CF6] text-[#8B5CF6] hover:bg-[#8B5CF6] hover:text-white transition-colors duration-300"
-          onClick={handleRefresh}
-        >
-          <RefreshCw className="mr-2 h-4 w-4" />
-          New idea
-        </Button>
       </CardContent>
     </Card>
   );
