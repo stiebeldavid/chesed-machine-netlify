@@ -37,6 +37,7 @@ const Index = () => {
   });
   const [ideasCount, setIdeasCount] = useState(0);
   const [shareOpen, setShareOpen] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(true);
 
   const generateNewAction = () => {
     return actions[Math.floor(Math.random() * actions.length)];
@@ -57,6 +58,8 @@ const Index = () => {
       time: generateNewTime(),
     });
     setIdeasCount(prev => prev + 1);
+    setIsAnimating(true);
+    setTimeout(() => setIsAnimating(false), 1000); // Stop after ~2 bounces
   };
 
   const handleNewAction = () => {
@@ -85,6 +88,8 @@ const Index = () => {
 
   useEffect(() => {
     generateNewIdea();
+    // Stop initial animation after 1 second
+    setTimeout(() => setIsAnimating(false), 1000);
   }, []);
 
   const fullIdeaText = `${currentIdea.action} ${currentIdea.recipient} ${currentIdea.time}`;
@@ -100,7 +105,7 @@ const Index = () => {
 
         <Button 
           size="lg" 
-          className="bg-[#8B5CF6] hover:bg-[#7C3AED] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-110 active:scale-95 rounded-full px-8 py-6 font-semibold text-lg animate-bounce"
+          className={`bg-[#8B5CF6] hover:bg-[#7C3AED] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-110 active:scale-95 rounded-full px-8 py-6 font-semibold text-lg ${isAnimating ? 'animate-bounce' : ''}`}
           onClick={generateNewIdea}
         >
           ✨ Generate Ideas ✨
